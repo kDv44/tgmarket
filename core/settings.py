@@ -1,21 +1,13 @@
 import os
-
 from pathlib import Path
-from dotenv import load_dotenv
-
-
-load_dotenv()
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-SECRET_KEY = "django-insecure-3wbczjn$)ult*$1h*tc&n9*@b#v*)mlj8a2iv!su)i7s#rr!91"
+SECRET_KEY = "django-insecure-uifbjg6)!md4nz)+j*t@)zitrj62_zegu)lhdsj_)+gq$udxe3"
 
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -24,8 +16,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    ######################
-    "rest_framework",
+    #############################
+    "app",
+    "django_celery_beat",
+    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -38,7 +32,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "milkshop.urls"
+ROOT_URLCONF = "core.urls"
+
 
 TEMPLATES = [
     {
@@ -56,37 +51,20 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "milkshop.wsgi.application"
 
+WSGI_APPLICATION = "core.wsgi.application"
 
-# DATABASES = {
-# #     "default": {
-# #         "ENGINE": "django.db.backends.sqlite3",
-# #         "NAME": BASE_DIR / "db.sqlite3",
-# #     }
-# # }
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "HOST": "localhost" if os.environ.get("ENVIRONMENT") != "docker" else "db",
-        "PORT": "5432",
-        "NAME": os.environ.get("DB_NAME"),
-        "USER": os.environ.get("DB_USER"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://localhost:6379/",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
-    },
-}
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", default="redis://localhost:6379/0")
+CELERY_BEAT_SCHEDULER = os.environ.get("CELERY_BROKER", default="redis://localhost:6379/0")
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -103,7 +81,6 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-
 
 LANGUAGE_CODE = "en-us"
 
