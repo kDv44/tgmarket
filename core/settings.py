@@ -1,9 +1,11 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = "django-insecure-uifbjg6)!md4nz)+j*t@)zitrj62_zegu)lhdsj_)+gq$udxe3"
+SECRET_KEY = str(os.getenv("SECRET_KEY"))
 
 DEBUG = True
 
@@ -55,10 +57,24 @@ TEMPLATES = [
 WSGI_APPLICATION = "core.wsgi.application"
 
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": "pgdb",
+        "PORT": "5432",
+        "NAME": os.environ.get("POSTGRES_DB"),
+        "USER": os.environ.get("POSTGRES_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+        "OPTIONS": {
+            "options": "-c client_encoding=utf8"
+        },
     }
 }
 
@@ -82,13 +98,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = str(os.getenv("LANGUAGE_CODE"))
 
-TIME_ZONE = "UTC"
+TIME_ZONE = str(os.getenv("TIME_ZONE"))
 
-USE_I18N = True
+USE_I18N = os.getenv("USE_I18N")
 
-USE_TZ = True
+USE_TZ = os.getenv("USE_TZ")
 
 STATIC_URL = "static/"
 
