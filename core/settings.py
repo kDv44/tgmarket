@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,6 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     #############################
     "app",
+    "rest_framework",
     "django_celery_beat",
     "django_celery_results",
 ]
@@ -72,15 +74,19 @@ DATABASES = {
         "NAME": os.environ.get("POSTGRES_DB"),
         "USER": os.environ.get("POSTGRES_USER"),
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-        "OPTIONS": {
-            "options": "-c client_encoding=utf8"
-        },
+        "OPTIONS": {"options": "-c client_encoding=utf8"},
     }
 }
 
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
+}
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", default="redis://localhost:6379/0")
-CELERY_BEAT_SCHEDULER = os.environ.get("CELERY_BROKER", default="redis://localhost:6379/0")
+CELERY_BEAT_SCHEDULER = os.environ.get(
+    "CELERY_BROKER", default="redis://localhost:6379/0"
+)
 
 
 AUTH_PASSWORD_VALIDATORS = [
